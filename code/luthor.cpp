@@ -28,15 +28,6 @@ std::ifstream text(text_filename, std::ifstream::in);
 text.close();
 };
 
-void Token::populate_list(ifstream &text){
-	//generated::start
-		//the tables of states for each type
-		
-		//the actual state of each type's expression
-	
-	//generated::end
-};
-
 //returns the token at the top of the list
 	//if the the list is empty then return an empty Token
 Token Lexer::next_token(){
@@ -50,3 +41,24 @@ Token retVal;
 return retVal;
 }:
 
+void Token::populate_list(ifstream &text){
+	//add the start token to the token_list
+	token_list.push(Token(token_type::start, "");
+	//generated::start
+		//the tables of states for each type
+		state type_table[] = {
+			{false, {1},    {"\3\0\n"} },
+			{false, {1, 2}, {"\3\1:", "\3\0:"} },
+			{true,  {0},    {"\2\1"} }
+		};
+		state regexp_table[] = {
+			{false, {1},    {"\3\0:"} },
+			{false, {1, 2}, {"\3\1\n","\3,\0\n"} },
+			{true,  {0},    {"\1\1"}  }
+		};	
+		//the actual state of each type's expression
+		int type_state = 0;
+		int regexp_state = 0;	
+	//generated::end
+	token_list.push(Token(token_type::end, "");
+};

@@ -29,6 +29,19 @@ class Lexer{
 		std::queue<Token> token_list;
 		void populate_list(ifstream &text);
 
+		//each state will have a set of states to go to and 
+			//the conditions to move to them
+			//the first character shows the length of the string
+			//the second character of the condition can be \0 \1 \2 
+				//\0 for being one of any in the string
+				//\1 for being any character except that in the string
+			
+		typedef struct state{
+			bool end_state;
+			int * next_state_index;
+			char ** next_state_conditions;
+		};
+
 	public:
 		Lexer(std::string text_filename);
 		Token next_token();
