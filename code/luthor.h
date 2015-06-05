@@ -28,8 +28,9 @@ class Lexer{
 	protected:	
 		std::queue<Token> token_list;
 		void populate_list(ifstream &text);
-
-		//each state will have a set of states to go to and 
+		bool meet_condition(char curChar, char * condition);
+		//each state will have a set of states to go to with the 
+		// first number being the number of states
 			//the conditions to move to them
 			//the first character shows the length of the string
 			//the second character of the condition can be \0 \1 \2 

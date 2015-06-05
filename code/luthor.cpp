@@ -47,18 +47,54 @@ void Token::populate_list(ifstream &text){
 	//generated::start
 		//the tables of states for each type
 		state type_table[] = {
-			{false, {1},    {"\3\0\n"} },
-			{false, {1, 2}, {"\3\1:", "\3\0:"} },
-			{true,  {0},    {"\2\1"} }
+			{false, {1, 1},    {"\3\0\n"} },
+			{false, {2, 1, 2}, {"\3\1:", "\3\0:"} },
+			{true,  {1, 0},    {"\2\1"} }
 		};
+
 		state regexp_table[] = {
-			{false, {1},    {"\3\0:"} },
-			{false, {1, 2}, {"\3\1\n","\3,\0\n"} },
-			{true,  {0},    {"\1\1"}  }
-		};	
+			{false, {1, 1},    {"\3\0:"} },
+			{false, {2, 1, 2}, {"\3\1\n","\3,\0\n"} },
+			{true,  {1, 0},    {"\1\1"}  }
+		};
+
+		int table_num = 2;	
+		//the tables in one table of tables lol
+		state * tables[] = {type_table, regexp_table};
 		//the actual state of each type's expression
-		int type_state = 0;
-		int regexp_state = 0;	
+		int table_states = {0, 0};
+ 
 	//generated::end
+
+		char curChar;
+		//until the file reaches the end
+		while(!text.eof()){
+			curChar = text.get();
+			//for each state and corresponding state table
+				//check to see if the current character 
+				//meets the conditions for changing the state
+			for(int i = 0; i < table_num; i++){
+				state * cur_table = tables[i];
+				int cur_state = table_states[i];
+				for(int j = 1; j < cur_state.next_state_index[0]; j++)
+					
+			}	
+		};
+	
 	token_list.push(Token(token_type::end, "");
 };
+
+bool Lexer::meet_condition(char curChar, char * condition){
+	//the modifier is set true if the condition is false upon
+	bool retVal = (condition[1] == 0);
+	//this code does two things
+		//if allowing only the characters mention
+			//if the characte matches any in the array return true 
+		//if allowing all characters except those mentioned
+			//if the character matches any in the array return false
+	for(int i = 2; i < condition[0]; i++){
+		if( (curChar == condition[i])) return retVal;
+//no characters were found return false/true.	
+return !retVal;
+};
+
