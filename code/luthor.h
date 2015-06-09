@@ -28,9 +28,9 @@ class Lexer{
 	protected:	
 		std::queue<Token> token_list;
 		void populate_list(ifstream &text);
-		bool meet_condition(char curChar, char * condition);
+		
+		//the possible state of the recognizers of a pattern
 		//each state will have a set of states to go to with the 
-		// first number being the number of states
 			//the conditions to move to them
 			//the first character shows the length of the string
 			//the second character of the condition can be \0 \1 \2 
@@ -39,10 +39,10 @@ class Lexer{
 			
 		typedef struct state{
 			bool end_state;
-			int * next_state_index;
+			int num_states; int * next_state_index;
 			char ** next_state_conditions;
 		};
-
+		int next_state(char cur_char, state cur_state);
 	public:
 		Lexer(std::string text_filename);
 		Token next_token();

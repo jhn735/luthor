@@ -47,15 +47,15 @@ void Token::populate_list(ifstream &text){
 	//generated::start
 		//the tables of states for each type
 		state type_table[] = {
-			{false, {1, 1},    {"\3\0\n"} },
-			{false, {2, 1, 2}, {"\3\1:", "\3\0:"} },
-			{true,  {1, 0},    {"\2\1"} }
+			{false, 1, {1},    {"\3\0\n"} },
+			{false, 2, {1, 2}, {"\3\1:", "\3\0:"} },
+			{true,  1, {0},    {"\2\1"} }
 		};
 
 		state regexp_table[] = {
-			{false, {1, 1},    {"\3\0:"} },
-			{false, {2, 1, 2}, {"\3\1\n","\3,\0\n"} },
-			{true,  {1, 0},    {"\1\1"}  }
+			{false, 1, {1},    {"\3\0:"} },
+			{false, 2, {1, 2}, {"\3\1\n","\3,\0\n"} },
+			{true,  1, {0},    {"\2\1"}  }
 		};
 
 		int table_num = 2;	
@@ -63,28 +63,46 @@ void Token::populate_list(ifstream &text){
 		state * tables[] = {type_table, regexp_table};
 		//the actual state of each type's expression
 		int table_states = {0, 0};
- 
+		
 	//generated::end
-
+		//the value to be set if a recognizer recognizes something
+		std::string cur_value;
+		//the number of 
 		char curChar;
 		//until the file reaches the end
 		while(!text.eof()){
 			curChar = text.get();
 			//for each state and corresponding state table
-				//check to see if the current character 
-				//meets the conditions for changing the state
+				//find the next state
 			for(int i = 0; i < table_num; i++){
-				state * cur_table = tables[i];
-				int cur_state = table_states[i];
-				for(int j = 1; j < cur_state.next_state_index[0]; j++)
-					
+				//get the current state from the set of tables
+				state cur_state = tables[i][table_states[i]];
+				//set the next state given the current char and the state
+				table_states[i] = next_state(curChar, cur_state);		
+				//get the now updated state and check to see if is the end
+				cur_state = tables[i][table_states[i]];	
+				if(cur_state.end_state)
 			}	
 		};
 	
 	token_list.push(Token(token_type::end, "");
 };
 
-bool Lexer::meet_condition(char curChar, char * condition){
+bool meet_condition(char curChar, char * condition);
+
+int Lexer::next_state(char cur_char, state cur_state){
+	char * cur_condition;
+	//for each potential state, check to see if the char meets the conditions
+	for(int i = 0; i < cur_state.num_states; i++){
+		cur_condition = cur_state.next_state_conditions[i];
+		if(meet_condition(cur_char, cur_condition))	
+			return cur_state.next_state_index[i];
+	}
+//if no conditions were met reset to the start state
+return 0;
+};
+
+bool meet_condition(char curChar, char * condition){
 	//the modifier is set true if the condition is false upon
 	bool retVal = (condition[1] == 0);
 	//this code does two things
@@ -97,4 +115,3 @@ bool Lexer::meet_condition(char curChar, char * condition){
 //no characters were found return false/true.	
 return !retVal;
 };
-
