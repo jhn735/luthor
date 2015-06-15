@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -g -Wall
+FLAGS = -std=c++11 -I./src/include -g
 
-luthor: main.cpp  
+luthor: src/main.cpp src/luthor.cpp 
 	$(CC) $(FLAGS) -o $@ $^ 
