@@ -3,7 +3,7 @@
 	#include <string>
 	#include <fstream>
 	#include <queue>
-
+	#include <string>
 enum token_type{
 	start = 0,
 	//generated::start
@@ -11,6 +11,7 @@ enum token_type{
 	//generated::end
 	end		
 };
+
 
 class Token{
 	public:
@@ -28,7 +29,7 @@ class Lexer{
 	protected:	
 		std::queue<Token> token_list;
 		void populate_list(std::ifstream &text);
-		
+			
 		//the possible state of the recognizers of a pattern
 		//each state will have a set of states to go to with the 
 			//the conditions to move to them
@@ -36,12 +37,17 @@ class Lexer{
 			//the second character of the condition can be \0 \1 \2 
 				//\0 for being one of any in the string
 				//\1 for being any character except that in the string
-			
-		typedef struct state{
-			int num_states; int * next_state_index;
-			char ** next_state_conditions;
-		} state;
+		typedef struct state_transition{
+			int next_state_index; char * next_state_conditions;
+		} state_transition;
 
+		class state{
+			public:
+				state(int num_transitions, ...);
+				int num_transitions;
+				std::vector<state_transition> transitions;
+		};
+		
 		int next_state(char cur_char, state cur_state);
 	public:
 		Lexer(std::string text_filename);

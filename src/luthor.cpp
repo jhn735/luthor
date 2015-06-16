@@ -1,7 +1,9 @@
 #include "luthor.h"
 #include <string>
 #include <iostream>
+#include <cstdarg>
 #include <fstream>
+
 using namespace std;
 /*****Token class*******/
 Token::Token(){
@@ -16,6 +18,24 @@ Token::Token(token_type type, string value){
 
 token_type Token::type(){ return _type;};
 string Token::value(){ return _value;};
+/**********state class************/
+//the first argument holds the total number of state transitions
+//the next set of arguments alternate between the index of the next
+	//state to transition to and the conditions met when a transition occurs
+Lexer::state::state(int num_transitions, ...){
+	this->num_transitions = num_transitions;
+	
+	//extract the arguments
+	va_list args;
+	va_start(args, num_transitions);
+	for(int i = 0; i < num_transitions; i++){
+		state_transition s;
+			s.next_state_index = va_arg(args, int);
+			s.next_state_conditions = va_arg(args, char*);
+		transitions.push_back(s);
+	}
+	va_end(args);
+};
 
 /*********Lexer class*************/
 Lexer::Lexer(string text_filename){
@@ -52,16 +72,15 @@ void Lexer::populate_list(ifstream &text){
 			int table_size = 3;
 		//the tables of states for each type
 		state type_table[]{ 
-			{ , new int*{1},    new char**{"\4\0\n,"} },
-			{ 2, new int*{1, 2}, new char**{"\3\1:", "\3\0:"} },
-			{ 1, new int*{0},    new char**{"\2\1"} }
+			state(1, 1, "\4\0\n,"),
+			state(2, 1, "\3\1:", 2, "\3\0:"),
+			state(1, 0, "\2\1")
 		};
-		
 
 		state regexp_table[]{
-			{1, new int*{1},    new char**{"\3\0:"} },
-			{2, new int*{1, 2}, new char**{"\3\1\n","\3,\0\n"} },
-			{1, new int*{0},    new char**{"\2\1"}  }
+			state(1, 1, "\3\0:"),
+			state(2, 1, "\3\1\n", 2, "\3\0\n"),
+			state(1, 0, "\2\1")
 		};
 		
 		int table_num = 2;	
@@ -119,11 +138,11 @@ bool meet_condition(char curChar, char * condition);
 int Lexer::next_state(char cur_char, state cur_state){
 	char * cur_condition;
 	//for each potential state, check to see if the char meets the conditions
-	for(int i = 0; i < cur_state.num_states; i++){
-		cur_condition = cur_state.next_state_conditions[i];
+	for(int i = 0; i < cur_state.num_transitions; i++){
+		cur_condition = cur_state.transitions[i].next_state_conditions;
 		//if the condition is met return the corresponding next state index
 		if(meet_condition(cur_char, cur_condition))	
-			return cur_state.next_state_index[i];
+			return cur_state.transitions[i].next_state_index;
 	}
 //if no conditions were met reset to the start state
 return 0;
