@@ -151,7 +151,7 @@ return 0;
 bool meet_condition(char curChar, char * condition){
 	//this code does two things
 		//if allowing only the characters mentioned
-			//return true if the characte matches any in the array 
+			//return true if the character matches any in the array 
 		//if allowing all characters except those mentioned
 			//return false if the character matches any in the array
 	bool retVal = (condition[1] == 0);

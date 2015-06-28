@@ -53,15 +53,17 @@ return @retVal;
 }
 
 #open the output file
-open code_file, ">", "code.h" or die "code.h: $!";
+open code_file, ">", "include/code.h" or die "code.h: $!";
 print code_file "#ifndef CODE_H \n#define CODE_H\n";
 
 my @filenames = ('luthor.h', 'luthor.cpp');
-
+my @paths = ('./include/', './');
 #for each of the filenames
-foreach $filename (@filenames){
+for my $index (0 .. $#filenames){
+	my $filename = $filenames[$index];
+	my $path = $paths[$index];
 	#get the pieces of the file and save them to the code
-	my @codePieces = codify($filename);
+	my @codePieces = codify($path . $filename);
 	my $index = 0;
 	#change the filename to all caps and replace the '.' with a '_'
 	my $name = $filename;

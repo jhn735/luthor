@@ -4,14 +4,14 @@
 	#include <fstream>
 	#include <queue>
 	#include <string>
+	#include <cstdint>
 enum token_type{
 	start = 0,
 	//generated::start
-			type, regexp, NIL,
+			type, regexp,
 	//generated::end
-	end		
+	NIL, end
 };
-
 
 class Token{
 	public:
