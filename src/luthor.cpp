@@ -49,7 +49,6 @@ ifstream text(filename, ios_base::in);
 //make sure the text is closed upon exiting
 text.close();
 };
-
 //returns the token at the top of the list
 	//if the the list is empty then return an empty Token
 Token Lexer::next_token(){

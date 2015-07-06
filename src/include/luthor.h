@@ -4,7 +4,8 @@
 	#include <fstream>
 	#include <queue>
 	#include <string>
-	#include <cstdint>
+	#include "symbol.h"
+
 enum token_type{
 	start = 0,
 	//generated::start
@@ -13,16 +14,18 @@ enum token_type{
 	NIL, end
 };
 
+typedef std::basic_string<symbol> symbol_string;
+
 class Token{
 	public:
 		Token();
 		Token(token_type type, std::string value);
 		token_type type();
-		std::string value();
+		symbol_string value();
 	protected:
 		token_type _type;
 		//value given by the lexer that creates it 
-		std::string _value;	
+		symbol_string _value;	
 };
 
 class Lexer{
@@ -50,7 +53,7 @@ class Lexer{
 		
 		int next_state(char cur_char, state cur_state);
 	public:
-		Lexer(std::string text_filename);
+		Lexer(std::ifstream &text);
 		Token next_token();
 };
 #endif
