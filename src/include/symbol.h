@@ -1,9 +1,14 @@
 #include <string>
 //symbol
 typedef uint64_t symbol;
-typedef int64_t int_type;
+
 namespace std{
 template <> struct char_traits<symbol>{
+	typedef symbol char_type;
+	typedef int64_t int_type;
+	typedef streampos pos_type;
+	typedef streamoff off_type;
+
 	static bool   eq(symbol s1, symbol s2){ return s1 == s2; };
 	static bool   lt(symbol s1, symbol s2){ return s1 < s2;  };
 	static size_t length(const symbol* s) { 
@@ -67,5 +72,5 @@ template <> struct char_traits<symbol>{
 		return x == y;
 	};
 		
-	}//end char_traits
-}//end std;
+};//end char_traits
+}; //end std
