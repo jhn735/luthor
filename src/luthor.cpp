@@ -68,9 +68,17 @@ bool state::state_transition::meets_condition(symbol cur_sym){
 }
 
 /***********state_table class***********/
-state_table::state_table(token_type type, std::vector<state> table){
-  this->_table = table;
+//the variable argument is the states held within the table
+state_table::state_table(token_type type, int table_size,  ...){
   this->_type = type;
+	
+  va_list args;
+  
+  va_start(args, table_size);
+  for(int i = 0; i < table_size; i++){
+	  this->_table.push_back( va_arg(args, state));
+  }
+  va_end(args);
   reset();
 };
 
@@ -142,20 +150,16 @@ return Token();
   //generated::start
 std::vector<state_table> lexer_luthor::m = { 
   state_table(
-	type,
-	{ 
-	  state(1, 1, {4, 0, U'\n', U','}),
-	  state(2, 1, {3, 1, U':'}, 2, {3, 0, U':', 0}),
+	type, 3, 
+	  state(1, 1, "\4\0\n,"),
+	  state(2, 1, "\3\1:", 2, "\3\0:\0"),
 	  state(0)
-	}
   ),
   state_table(
-	regexp, 
-	{
-	  state(1, 1, {3, 0, U':'}),
-	  state(2, 1, {3, 1, U'\n'}, 2, {3, 0, U'\n'}),
+	regexp, 3,
+	  state(1, 1, "\3\0:"),
+	  state(2, 1, "\3\1\n", 2, "\3\0\n"),
 	  state(0)
-	}
   )
 };
   //generated::end
