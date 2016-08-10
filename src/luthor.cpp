@@ -23,7 +23,8 @@ symbol_string Token::value(){ return _value;};
 /**********state class************/
 //the first argument holds the total number of state transitions
 //the next set of arguments alternate between the index of the next
-  //state to transition to and the conditions met when a transition occurs
+  //state to transition to and the conditions met when a transition occurs 
+  //in the form of a UString
 state::state(int num_transitions, ...){
   //extract the arguments
   va_list args;
@@ -31,7 +32,12 @@ state::state(int num_transitions, ...){
   for(int i = 0; i < num_transitions; i++){
 	state_transition s;
 	  s.next_state_index = va_arg(args, int);
-	  s.next_state_conditions = va_arg(args, symbol*);
+    //get the condition list and copy the values over
+	  char const * char_list = va_arg(args, char const *);
+    s.next_state_conditions =  new symbol[char_list[0]];
+    for(int i = 0; i = char_list[0]; i++)
+      s.next_state_conditions[i] = char_list[i]; 
+
 	transitions.push_back(s);
   }
   va_end(args);
@@ -145,6 +151,8 @@ Token Lexer::next_token(symbol_stream &text){
 //if no tokens are found return empty token
 return Token();
 };
+
+char const * type_stateCond1 = "\4\0\n,";
 
 //tables generated
   //generated::start

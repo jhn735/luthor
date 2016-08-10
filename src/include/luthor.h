@@ -60,7 +60,7 @@ class state_table{
   int cur_state_index; token_type _type;
 
   public:
-	state_table(token_type type, std::vector<state> table);
+	state_table(token_type type, int table_size, ...);
 	void update(symbol_luthor::symbol cur_sym);
 	bool initial_state();
 	bool final_state();
