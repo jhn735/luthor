@@ -35,7 +35,7 @@ state::state(int num_transitions, ...){
     //get the condition list and copy the values over
 	  char const * char_list = va_arg(args, char const *);
     s.next_state_conditions =  new symbol[char_list[0]];
-    for(int i = 0; i = char_list[0]; i++)
+    for(int i = 0; i < char_list[0]; i++)
       s.next_state_conditions[i] = char_list[i]; 
 
 	transitions.push_back(s);
