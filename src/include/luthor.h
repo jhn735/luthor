@@ -35,8 +35,8 @@ class Token{
 	//the conditions to move to them.
 //The first character shows the length of the string.
 //The second character of the condition can be \0 \1 \2 
-	//\0 for being one of any in the string
-	//\1 for being any character except that in the string
+	//\0 for being one of any character except those in the string
+	//\1 for being any character in the string
 class state{
   typedef struct state_transition{
 	int next_state_index; symbol_luthor::symbol * next_state_conditions;
